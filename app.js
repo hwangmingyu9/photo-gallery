@@ -8,9 +8,10 @@ const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static('public')); // CSS, JS
+app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // multer 설정
 const storage = multer.diskStorage({
@@ -31,10 +32,20 @@ app.get('/', (req, res) => {
   res.render('index', { images });
 });
 
-// 업로드 처리 (Ajax)
+// 업로드 처리
 app.post('/upload', upload.single('photo'), (req, res) => {
   const filePath = `/uploads/${req.file.filename}`;
-  res.json({ success: true, filePath });
+  res.json({ success: true, filePath, filename: req.file.filename });
+});
+
+// 삭제 처리
+app.post('/delete', (req, res) => {
+  const { filenames } = req.body; // 배열로 전달
+  filenames.forEach(name => {
+    const filePath = path.join(__dirname, 'uploads', name);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  });
+  res.json({ success: true });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
