@@ -1,16 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>사진보관함</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사진보관함</title>
+<style>
+  body { font-family: sans-serif; padding: 10px; }
+  h2 { text-align: center; }
+  form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  input[type=file] { padding: 5px; }
+  button { padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; }
+  .gallery { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .gallery img { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; }
+</style>
 </head>
 <body>
-  <h2>사진 업로드</h2>
-  <form action="/upload" method="POST" enctype="multipart/form-data">
-    <label>날짜 선택: <input type="date" name="date" required></label><br><br>
-    <label>사진 선택: <input type="file" name="photo" accept="image/*" required></label><br><br>
-    <button type="submit">업로드</button>
-  </form>
+<h2>사진보관함</h2>
+<form id="uploadForm">
+  <input type="date" name="date" required>
+  <input type="file" name="photo" accept="image/*" required>
+  <button type="submit">업로드</button>
+</form>
+
+<div class="gallery" id="gallery">
+  <% images.forEach(img => { %>
+    <img src="/uploads/<%= img %>" alt="photo">
+  <% }) %>
+</div>
+
+<script>
+const form = document.getElementById('uploadForm');
+const gallery = document.getElementById('gallery');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const res = await fetch('/upload', { method: 'POST', body: formData });
+  const data = await res.json();
+  if(data.success) {
+    const img = document.createElement('img');
+    img.src = data.filePath;
+    gallery.prepend(img); // 새 사진을 제일 위에 표시
+  }
+});
+</script>
 </body>
 </html>
