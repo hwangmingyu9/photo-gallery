@@ -4,37 +4,46 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
 
-// 업로드 폴더 생성 (없을 때 자동 생성)
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+// 포트 설정 (Render 환경 변수 사용)
+const PORT = process.env.PORT || 3000;
 
-// Multer 설정
+// EJS 뷰 엔진
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// 업로드 폴더 경로 (날짜별 하위 폴더 생성)
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const date = req.body.date || new Date().toISOString().split('T')[0];
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, `${date}-${uniqueSuffix}${path.extname(file.originalname)}`);
+  destination: function (req, file, cb) {
+    const today = new Date();
+    const folder = path.join(__dirname, 'uploads', `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`);
+    fs.mkdirSync(folder, { recursive: true });
+    cb(null, folder);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const upload = multer({ storage });
 
-// EJS 설정
-app.set('view engine', 'ejs');
-app.use(express.static('uploads'));
+const upload = multer({ storage: storage });
+
+// 정적 파일 경로
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Body parser
 app.use(express.urlencoded({ extended: true }));
 
-// 메인 페이지
+// 루트 페이지
 app.get('/', (req, res) => {
-  const files = fs.readdirSync(uploadDir);
-  res.render('index', { files });
+  res.render('index');
 });
 
 // 업로드 처리
 app.post('/upload', upload.single('photo'), (req, res) => {
-  res.redirect('/');
+  res.send('업로드 완료! <a href="/">뒤로가기</a>');
 });
 
-app.listen(PORT, () => console.log(`✅ 서버 실행 중: http://localhost:${PORT}`));
+// 서버 시작
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

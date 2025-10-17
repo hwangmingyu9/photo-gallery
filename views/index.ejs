@@ -1,117 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📱 민규의 사진 보관함</title>
-
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-      text-align: center;
-    }
-
-    header {
-      background: #1e90ff;
-      color: white;
-      padding: 20px 0;
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
-
-    form {
-      background: white;
-      margin: 15px;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    input[type="date"], input[type="file"] {
-      width: 90%;
-      margin: 10px auto;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      display: block;
-    }
-
-    button {
-      background: #1e90ff;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      width: 95%;
-    }
-
-    button:hover {
-      background: #187bcd;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-      padding: 10px;
-    }
-
-    .photo {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
-      padding: 5px;
-    }
-
-    img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
-
-    p {
-      font-size: 0.8rem;
-      color: #666;
-      word-break: break-all;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        font-size: 1.2rem;
-      }
-      button {
-        font-size: 1rem;
-      }
-    }
-  </style>
+  <title>사진보관함</title>
 </head>
 <body>
-  <header>📸 민규의 사진 보관함</header>
-
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="date" name="date" required>
-    <input type="file" name="photo" accept="image/*" required>
-    <button type="submit">사진 업로드</button>
+  <h2>사진 업로드</h2>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <label>날짜 선택: <input type="date" name="date" required></label><br><br>
+    <label>사진 선택: <input type="file" name="photo" accept="image/*" required></label><br><br>
+    <button type="submit">업로드</button>
   </form>
-
-  <div class="gallery">
-    <% if (files.length === 0) { %>
-      <p>아직 업로드된 사진이 없습니다.</p>
-    <% } else { %>
-      <% files.forEach(file => { %>
-        <div class="photo">
-          <img src="/<%= file %>" alt="<%= file %>">
-          <p><%= file %></p>
-        </div>
-      <% }) %>
-    <% } %>
-  </div>
 </body>
 </html>
