@@ -33,13 +33,13 @@ const storage = getStorage(app);
 // ✅ 앨범 정의
 const ALBUMS = {
   date: { title: "데이트", emoji: "💖", collection: "date" },
-  mingyu: { title: "민규", emoji: "💚", collection: "mingyu" },
-  yoonjung: { title: "윤정", emoji: "💜", collection: "yoonjung" },
+  mingyu: { title: "민규", emoji: "🐻", collection: "mingyu" },
+  yoonjung: { title: "윤정", emoji: "🐰", collection: "yoonjung" },
   memo: { title: "메모", emoji: "📝", collection: "memo" },
   all: { title: "모든 사진", emoji: "🌍", collection: "all" }
 };
 
-let currentAlbum = "date";
+let currentAlbum = "all"; // 기본 홈(모든사진)
 let allPhotos = [];
 let currentIndex = 0;
 
@@ -60,10 +60,10 @@ const el = {
   memoList: document.getElementById("memo-list"),
 };
 
-// ✅ 마지막 앨범 기억
+// ✅ 페이지 로드 시 마지막 앨범 또는 홈
 window.addEventListener("DOMContentLoaded", () => {
   const last = localStorage.getItem("lastAlbum");
-  setAlbum(last && ALBUMS[last] ? last : "date");
+  setAlbum(last && ALBUMS[last] ? last : "all");
 });
 window.addEventListener("beforeunload", () => {
   localStorage.setItem("lastAlbum", currentAlbum);
@@ -206,13 +206,13 @@ function showImageModal(url) {
     modal.id = "image-modal";
     modal.className = "modal";
     modal.innerHTML = `
-      <button class="modal-nav prev">◀</button>
+      <button class="modal-nav prev" style="color:#1b5e20;background:rgba(255,255,255,0.7)">◀</button>
       <div class="modal-content">
         <img id="modal-img" src="" alt="preview" />
         <div id="img-info"></div>
         <button id="download-btn">⬇ 다운로드</button>
       </div>
-      <button class="modal-nav next">▶</button>
+      <button class="modal-nav next" style="color:#1b5e20;background:rgba(255,255,255,0.7)">▶</button>
     `;
     document.body.appendChild(modal);
 
@@ -287,5 +287,9 @@ function loadMemos() {
 }
 
 // ✅ 메뉴 버튼 이벤트
-el.navBtns.forEach((b) => b.addEventListener("click", () => setAlbum(b.dataset.album)));
-document.querySelector(".nav-title").addEventListener("click", () => location.reload());
+el.navBtns.forEach((b) => {
+  if (b.dataset.album !== "all") b.addEventListener("click", () => setAlbum(b.dataset.album));
+});
+
+// ✅ "사진보관함 📸" 클릭 시 홈(모든사진) 이동
+document.querySelector(".nav-title").addEventListener("click", () => setAlbum("all"));

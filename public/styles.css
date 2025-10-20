@@ -26,7 +26,7 @@ body {
   cursor: pointer;
 }
 
-/* ✅ 메뉴 바 (밑 흰색 부분) */
+/* ✅ 메뉴 바 */
 .subnav {
   background: #fff;
   border-bottom: 1px solid #ddd;
@@ -43,11 +43,11 @@ body {
 .nav-btn {
   background: transparent;
   border: none;
-  color: #222; /* 글자색 진하게 */
-  font-weight: 600; /* 굵게 */
+  color: #222;
+  font-weight: 600;
   font-size: 15px;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
@@ -74,21 +74,52 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
-input, select, button {
+
+.upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.upload-row input,
+.upload-row select {
+  flex: 1;
+  min-width: 150px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0 10px;
   font-size: 14px;
 }
-button {
-  background: #4CAF50;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+
+/* ✅ 버튼들 한 줄로 길게 */
+.action-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 640px;
 }
-button:hover { background: #43a047; }
+.action-row button {
+  flex: 1;
+  height: 42px;
+  font-size: 15px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.action-row button:hover {
+  background: #43a047;
+}
 
 /* ✅ 갤러리 */
 .gallery {
@@ -121,44 +152,7 @@ button:hover { background: #43a047; }
   justify-content: space-between;
 }
 
-/* ✅ 메모 */
-.memo-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.memo-area textarea {
-  width: 100%;
-  max-width: 640px;
-  min-height: 80px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-#memo-list {
-  width: 100%;
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.memo-item {
-  background: #f6f6f6;
-  border-radius: 10px;
-  padding: 10px 40px 10px 12px;
-  position: relative;
-}
-.memo-del {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* ✅ 이미지 모달 */
+/* ✅ 모달 */
 .modal {
   position: fixed;
   inset: 0;
@@ -183,22 +177,24 @@ button:hover { background: #43a047; }
   box-shadow: 0 4px 10px rgba(0,0,0,.3);
 }
 
-/* 좌우 화살표 */
+/* 좌우 버튼 (더 진하게) */
 .modal-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.35);
   border: none;
-  color: white;
-  font-size: 28px;
-  padding: 10px 14px;
+  color: #2e7d32;
+  font-size: 30px;
+  font-weight: bold;
+  padding: 12px 16px;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 .modal-nav:hover {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.6);
+  color: #1b5e20;
 }
 .modal-nav.prev { left: 25px; }
 .modal-nav.next { right: 25px; }
@@ -224,6 +220,43 @@ button:hover { background: #43a047; }
   padding: 6px 10px;
   font-size: 13px;
   border-radius: 6px;
+}
+
+/* ✅ 메모 */
+.memo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.memo-area textarea {
+  width: 100%;
+  max-width: 640px;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#memo-list {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.memo-item {
+  background: #f6f6f6;
+  border-radius: 6px;
+  padding: 10px 40px 10px 12px;
+  position: relative;
+}
+.memo-del {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .hidden { display: none !important; }
