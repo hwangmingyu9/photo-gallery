@@ -45,12 +45,11 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* ✅ 본문 구조 */
+/* ✅ 본문 */
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   padding: 30px 10px;
   max-width: 480px;
   margin: 0 auto;
@@ -80,6 +79,7 @@ button:hover {
   background: #43a047;
 }
 
+/* ✅ 갤러리 */
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -120,9 +120,37 @@ button:hover {
   padding: 2px 0;
 }
 
-/* ✅ 반응형 */
-@media (max-width: 480px) {
-  .card {
-    width: 30%;
-  }
+/* ✅ 메모 영역 */
+.memo-area textarea {
+  width: 90%;
+  height: 100px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+#memo-list {
+  width: 90%;
+  text-align: left;
+  margin-top: 15px;
+}
+
+.memo-item {
+  background: #f2f2f2;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.memo-delete {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
 }

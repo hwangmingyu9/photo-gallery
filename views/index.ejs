@@ -22,12 +22,20 @@
   <!-- ✅ 본문 -->
   <main>
     <h2 id="album-title">🏠 홈</h2>
-    <div class="upload-area">
+
+    <div class="upload-area" id="upload-section">
       <input type="file" id="file-input" multiple />
       <input type="date" id="date-input" />
       <button id="upload-btn">업로드</button>
       <button id="delete-btn">선택 삭제</button>
     </div>
+
+    <div class="memo-area" id="memo-section" style="display:none;">
+      <textarea id="memo-text" placeholder="메모를 입력하세요..."></textarea>
+      <button id="memo-save-btn">메모 저장</button>
+      <div id="memo-list"></div>
+    </div>
+
     <div id="gallery" class="gallery"></div>
   </main>
 
