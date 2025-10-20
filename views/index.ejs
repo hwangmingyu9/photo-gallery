@@ -7,32 +7,55 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <!-- ✅ 상단 네비게이션 -->
+  <!-- ✅ 상단 초록바: 타이틀만 중앙 -->
   <nav class="navbar">
     <div class="nav-title">사진 보관함 📸</div>
+  </nav>
+
+  <!-- ✅ 하얀 서브바: 메뉴 버튼 (타이틀 아래, 우측 정렬) -->
+  <div class="subnav">
     <div class="nav-links">
       <button class="nav-btn" data-album="home">홈</button>
+      <button class="nav-btn" data-album="all">모든 사진</button>
       <button class="nav-btn" data-album="date">데이트</button>
       <button class="nav-btn" data-album="mingyu">민규</button>
       <button class="nav-btn" data-album="yoonjung">윤정</button>
+      <button class="nav-btn" data-album="shared">공용</button>
       <button class="nav-btn" data-album="memo">메모</button>
     </div>
-  </nav>
+  </div>
 
   <!-- ✅ 본문 -->
   <main>
-    <h2 id="album-title">🏠 홈</h2>
+    <h2 id="album-title">홈</h2>
 
+    <!-- 업로드/삭제 영역 (앨범에 따라 노출 제어) -->
     <div class="upload-area" id="upload-section">
-      <input type="file" id="file-input" multiple />
-      <input type="date" id="date-input" />
-      <button id="upload-btn">업로드</button>
-      <button id="delete-btn">선택 삭제</button>
+      <div class="controls-row">
+        <label class="date-label" for="date-input">날짜</label>
+        <input type="date" id="date-input" />
+        <input type="file" id="file-input" multiple />
+      </div>
+
+      <!-- 업로더 선택(민규/윤정) — 데이트/민규/윤정 에서만 보이게 -->
+      <div class="uploader-row" id="uploader-row" style="display:none;">
+        <span class="uploader-title">올린 사람:</span>
+        <label><input type="radio" name="uploader" value="민규" /> 민규</label>
+        <label><input type="radio" name="uploader" value="윤정" /> 윤정</label>
+      </div>
+
+      <div class="buttons-row">
+        <button id="upload-btn">업로드</button>
+        <button id="delete-btn">선택 삭제</button>
+      </div>
     </div>
 
+    <!-- 메모 영역 (메모 탭에서만 노출) -->
     <div class="memo-area" id="memo-section" style="display:none;">
       <textarea id="memo-text" placeholder="메모를 입력하세요..."></textarea>
-      <button id="memo-save-btn">메모 저장</button>
+      <div class="memo-controls">
+        <button id="memo-save-btn">메모 저장</button>
+      </div>
       <div id="memo-list"></div>
     </div>
 
