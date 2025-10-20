@@ -1,102 +1,56 @@
-/* =============================
-📸 사진 보관함 스타일 (민규 전용)
-============================= */
-
-/* 기본 구조 */
 body {
   font-family: Pretendard, sans-serif;
-  background: #ffffff;
-  color: #222;
+  background: #fff;
   text-align: center;
-  margin: 0;
-  padding: 40px 20px;
+  color: #222;
 }
 
-/* 제목 */
 h1 {
-  font-size: 28px;
-  margin-bottom: 25px;
+  margin-top: 20px;
 }
 
-/* 파일 선택, 버튼 */
-input[type="file"] {
-  display: inline-block;
-  margin-bottom: 10px;
+.upload-area {
+  margin: 20px 0;
 }
 
 button {
   background: #4CAF50;
-  color: #fff;
+  color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 15px;
-  transition: 0.2s;
+  margin: 5px;
 }
 
 button:hover {
   background: #43a047;
-  transform: scale(1.05);
 }
 
-/* 갤러리 전체 */
 .gallery {
-  margin-top: 30px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  margin-top: 20px;
 }
 
-/* 썸네일 */
-.thumb {
+.card {
+  position: relative;
   width: 160px;
   height: 160px;
-  object-fit: cover;
+  margin: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
-  transition: 0.25s;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
-.thumb:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* 반응형 (모바일 대응) */
-@media (max-width: 480px) {
-  body {
-    padding: 20px 10px;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
-
-  .thumb {
-    width: 120px;
-    height: 120px;
-  }
-}
-
-/* 스크롤 시 부드럽게 */
-html {
-  scroll-behavior: smooth;
-}
-
-/* 업로드 완료 후 갤러리 애니메이션 */
-.thumb {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.card.selected {
+  outline: 4px solid #4CAF50;
 }
