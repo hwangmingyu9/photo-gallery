@@ -278,7 +278,7 @@ main {
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 10px;
 }
 
@@ -288,34 +288,37 @@ main {
   padding: 10px 12px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  display: flex; /* ✅ 텍스트와 🗑️ 아이콘을 한 줄로 정렬 */
+  display: flex; /* 한 줄 정렬 */
   justify-content: space-between;
   align-items: center;
   color: #222;
   line-height: 1.5;
+  white-space: normal; /* ✅ 줄바꿈 자연스럽게 */
+  word-break: keep-all; /* ✅ 글자 단위로 안 끊기게 */
 }
 
 /* ✅ 메모 텍스트 */
 .memo-item div:first-child {
   flex: 1;
-  word-break: break-word;
+  white-space: pre-wrap; /* ✅ 줄바꿈 유지 + 가로로 흐름 */
+  overflow-wrap: break-word;
 }
 
-/* ✅ 🗑️ 삭제 버튼 작고 오른쪽 */
+/* ✅ 🗑️ 삭제 버튼 (더 작게) */
 .memo-del {
   background: transparent;
   border: none;
-  color: #555;
+  color: #777;
   cursor: pointer;
-  font-size: 15px;
-  margin-left: 8px;
+  font-size: 12px; /* 👈 훨씬 작게 */
+  margin-left: 10px;
   transition: color 0.2s;
 }
 .memo-del:hover {
   color: #000;
 }
 
-/* ✅ 날짜 (아래 작게 표시) */
+/* ✅ 날짜는 아래 작게 */
 .memo-meta {
   font-size: 11px;
   color: #777;
