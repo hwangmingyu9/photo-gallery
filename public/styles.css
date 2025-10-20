@@ -240,7 +240,7 @@ main {
 }
 #download-btn:hover { background: #43a047; }
 
-/* ✅ 메모 */
+/* ✅ 메모 영역 */
 .memo-area {
   display: flex;
   flex-direction: column;
@@ -284,41 +284,44 @@ main {
 
 /* ✅ 메모 카드 */
 .memo-item {
+  position: relative; /* 🧩 삭제버튼 고정 기준 */
   background: #f5f5f5;
-  padding: 10px 12px;
+  padding: 10px 36px 10px 14px; /* 오른쪽 여유 공간 확보 */
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  display: flex; /* 한 줄 정렬 */
-  justify-content: space-between;
-  align-items: center;
   color: #222;
   line-height: 1.5;
-  white-space: normal; /* ✅ 줄바꿈 자연스럽게 */
-  word-break: keep-all; /* ✅ 글자 단위로 안 끊기게 */
+  font-size: 13px; /* ✅ 메모 글씨 크기 */
+  word-break: keep-all; /* 단어 단위 줄바꿈 */
+  white-space: pre-wrap; /* 자연스러운 줄바꿈 */
+  overflow-wrap: break-word;
 }
 
 /* ✅ 메모 텍스트 */
 .memo-item div:first-child {
   flex: 1;
-  white-space: pre-wrap; /* ✅ 줄바꿈 유지 + 가로로 흐름 */
+  white-space: pre-wrap;
   overflow-wrap: break-word;
 }
 
-/* ✅ 🗑️ 삭제 버튼 (더 작게) */
+/* ✅ 🗑️ 삭제 버튼 (고정 + 작게) */
 .memo-del {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%); /* ✅ 세로 중앙 정렬 */
   background: transparent;
   border: none;
   color: #777;
   cursor: pointer;
-  font-size: 12px; /* 👈 훨씬 작게 */
-  margin-left: 10px;
+  font-size: 12px; /* 작게 */
   transition: color 0.2s;
 }
 .memo-del:hover {
   color: #000;
 }
 
-/* ✅ 날짜는 아래 작게 */
+/* ✅ 날짜 (아래 작게 표시) */
 .memo-meta {
   font-size: 11px;
   color: #777;
