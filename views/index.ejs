@@ -3,20 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>📸 Firebase 사진 보관함</title>
+  <title>사진 보관함 📸</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <h1>📸 Firebase 사진 보관함</h1>
+  <!-- ✅ 상단 네비게이션 -->
+  <nav class="navbar">
+    <div class="nav-title">사진 보관함 📸</div>
+    <div class="nav-links">
+      <button class="nav-btn" data-album="home">홈</button>
+      <button class="nav-btn" data-album="date">데이트</button>
+      <button class="nav-btn" data-album="mingyu">민규</button>
+      <button class="nav-btn" data-album="yoonjung">윤정</button>
+      <button class="nav-btn" data-album="memo">메모</button>
+    </div>
+  </nav>
 
-  <div class="upload-area">
-    <input type="file" id="file-input" multiple />
-    <input type="date" id="date-input" />
-    <button id="upload-btn">업로드</button>
-    <button id="delete-btn">선택 삭제</button>
-  </div>
-
-  <div id="gallery" class="gallery"></div>
+  <!-- ✅ 본문 -->
+  <main>
+    <h2 id="album-title">🏠 홈</h2>
+    <div class="upload-area">
+      <input type="file" id="file-input" multiple />
+      <input type="date" id="date-input" />
+      <button id="upload-btn">업로드</button>
+      <button id="delete-btn">선택 삭제</button>
+    </div>
+    <div id="gallery" class="gallery"></div>
+  </main>
 
   <script type="module" src="/app.js"></script>
 </body>
