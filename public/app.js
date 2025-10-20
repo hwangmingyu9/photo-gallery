@@ -1,23 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  query,
-  orderBy
+  getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
+  getStorage, ref, uploadBytes, getDownloadURL, deleteObject
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// 🔥 Firebase 연결
+// 🔥 Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyDycTuXpS0bbAmcKi8UWIeGVwCltd6K6Tk",
   authDomain: "photo-gallery-676d1.firebaseapp.com",
@@ -33,8 +22,8 @@ const storage = getStorage(app);
 // ✅ 앨범 정의
 const ALBUMS = {
   date: { title: "데이트/추억", emoji: "💖", collection: "date" },
-  mingyu: { title: "민규", emoji: "💚", collection: "mingyu" },
-  yoonjung: { title: "윤정", emoji: "💜", collection: "yoonjung" },
+  mingyu: { title: "민규 🐻", emoji: "💚", collection: "mingyu" },
+  yoonjung: { title: "윤정 🐰", emoji: "💜", collection: "yoonjung" },
   memo: { title: "메모", emoji: "📝", collection: "memo" },
   all: { title: "모든 사진", emoji: "🌍", collection: "all" }
 };
@@ -43,7 +32,7 @@ let currentAlbum = "all";
 let allPhotos = [];
 let currentIndex = 0;
 
-// ✅ 요소
+// ✅ 요소 선택
 const el = {
   title: document.getElementById("album-title"),
   navBtns: document.querySelectorAll(".nav-btn"),
@@ -58,12 +47,12 @@ const el = {
   memoInput: document.getElementById("memo-input"),
   memoAdd: document.getElementById("memo-add"),
   memoList: document.getElementById("memo-list"),
+  memoUser: document.getElementById("memo-user"),
 };
 
 // ✅ 마지막 앨범 기억
 window.addEventListener("DOMContentLoaded", () => {
-  const last = localStorage.getItem("lastAlbum");
-  setAlbum(last && ALBUMS[last] ? last : "all");
+  setAlbum("all");
 });
 window.addEventListener("beforeunload", () => {
   localStorage.setItem("lastAlbum", currentAlbum);
@@ -72,27 +61,20 @@ window.addEventListener("beforeunload", () => {
 // ✅ 앨범 변경
 function setAlbum(name) {
   currentAlbum = name;
-  localStorage.setItem("lastAlbum", name);
   const meta = ALBUMS[name];
   el.title.textContent = `${meta.emoji} ${meta.title}`;
 
-  // ✅ "메모"일 때는 업로더+메모만, 나머지 업로드/삭제 숨김
   el.uploadArea.classList.toggle("hidden", name === "all" || name === "memo");
   el.memoArea.classList.toggle("hidden", name !== "memo");
-
   el.gallery.innerHTML = "";
   allPhotos = [];
 
-  if (name === "memo") {
-    loadMemos();
-  } else if (name === "all") {
-    loadAllPhotos();
-  } else {
-    loadAlbumPhotos(name);
-  }
+  if (name === "memo") loadMemos();
+  else if (name === "all") loadAllPhotos();
+  else loadAlbumPhotos(name);
 }
 
-// ✅ 사진 업로드
+// ✅ 업로드
 el.uploadBtn.addEventListener("click", async () => {
   const files = el.fileInput.files;
   const date = el.dateInput.value;
@@ -106,11 +88,7 @@ el.uploadBtn.addEventListener("click", async () => {
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     await addDoc(collection(db, currentAlbum), {
-      url,
-      date,
-      uploader,
-      ts: Date.now(),
-      path
+      url, date, uploader, ts: Date.now(), path
     });
   }
 
@@ -119,7 +97,7 @@ el.uploadBtn.addEventListener("click", async () => {
   alert("✅ 업로드 완료!");
 });
 
-// ✅ 선택삭제
+// ✅ 삭제
 el.deleteBtn.addEventListener("click", async () => {
   const checks = Array.from(document.querySelectorAll(".select-chk:checked"));
   if (!checks.length) return alert("삭제할 사진을 선택하세요.");
@@ -144,13 +122,12 @@ function loadAlbumPhotos(name) {
     snap.forEach((docSnap) => {
       const data = docSnap.data();
       allPhotos.push({ ...data, id: docSnap.id, album: name });
-      const card = buildCard({ id: docSnap.id, ...data, album: name });
-      el.gallery.appendChild(card);
+      el.gallery.appendChild(buildCard({ id: docSnap.id, ...data, album: name }));
     });
   });
 }
 
-// ✅ 모든사진 (홈)
+// ✅ 모든 사진 보기
 function loadAllPhotos() {
   el.gallery.innerHTML = "";
   allPhotos = [];
@@ -161,15 +138,14 @@ function loadAllPhotos() {
       snap.forEach((docSnap) => {
         const data = docSnap.data();
         allPhotos.push({ ...data, id: docSnap.id, album: name });
-        const card = buildCard({ id: docSnap.id, ...data, album: name });
-        el.gallery.appendChild(card);
+        el.gallery.appendChild(buildCard({ id: docSnap.id, ...data, album: name, hideCheckbox: true }));
       });
     });
   });
 }
 
 // ✅ 카드 생성
-function buildCard({ id, url, date, uploader, album, path }) {
+function buildCard({ id, url, date, uploader, album, path, hideCheckbox }) {
   const card = document.createElement("div");
   card.className = "card";
   card.dataset.id = id;
@@ -184,19 +160,20 @@ function buildCard({ id, url, date, uploader, album, path }) {
     showImageModal(url);
   });
 
-  const chkWrap = document.createElement("div");
-  chkWrap.className = "check-wrap";
-  const chk = document.createElement("input");
-  chk.type = "checkbox";
-  chk.className = "select-chk";
-  chkWrap.appendChild(chk);
-
   const meta = document.createElement("div");
   meta.className = "meta";
   meta.innerHTML = `<span>${date || ""}</span><span>${uploader || ""}</span>`;
 
   card.appendChild(img);
-  card.appendChild(chkWrap);
+  if (!hideCheckbox) {
+    const chkWrap = document.createElement("div");
+    chkWrap.className = "check-wrap";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.className = "select-chk";
+    chkWrap.appendChild(chk);
+    card.appendChild(chkWrap);
+  }
   card.appendChild(meta);
   return card;
 }
@@ -222,14 +199,13 @@ function showImageModal(url) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.classList.remove("show");
     });
-    modal.querySelector(".prev").addEventListener("click", showPrev);
-    modal.querySelector(".next").addEventListener("click", showNext);
+    document.querySelector(".prev").addEventListener("click", showPrev);
+    document.querySelector(".next").addEventListener("click", showNext);
   }
 
   updateModalContent(url);
   modal.classList.add("show");
 }
-
 function updateModalContent(url) {
   const modal = document.getElementById("image-modal");
   const img = modal.querySelector("#modal-img");
@@ -241,7 +217,6 @@ function updateModalContent(url) {
   info.textContent = `${photo.album || ""} | ${photo.uploader || ""} | ${photo.date || ""}`;
   downloadBtn.onclick = () => window.open(url, "_blank");
 }
-
 function showPrev() {
   currentIndex = (currentIndex - 1 + allPhotos.length) % allPhotos.length;
   updateModalContent(allPhotos[currentIndex].url);
@@ -254,17 +229,17 @@ function showNext() {
 // ✅ 메모
 el.memoAdd?.addEventListener("click", async () => {
   const text = el.memoInput.value.trim();
-  const uploader = el.userSelect.value;
-  if (!text || !uploader) return alert("업로더와 메모를 입력하세요.");
+  const user = el.memoUser.value;
+  if (!text || !user) return alert("업로더와 메모를 입력하세요.");
   await addDoc(collection(db, "memo"), {
     text,
-    uploader,
+    user,
     ts: Date.now(),
-    date: new Date().toLocaleString()
+    date: new Date().toLocaleString(),
   });
   el.memoInput.value = "";
+  el.memoUser.value = "";
 });
-
 function loadMemos() {
   const q = query(collection(db, "memo"), orderBy("ts", "desc"));
   onSnapshot(q, (snap) => {
@@ -275,15 +250,17 @@ function loadMemos() {
       item.className = "memo-item";
       item.innerHTML = `
         <div>${data.text}</div>
-        <div class="memo-meta">${data.uploader} | ${data.date}</div>
+        <div class="memo-meta">${data.user} | ${data.date}</div>
+        <button class="memo-del">🗑️</button>
       `;
+      item.querySelector(".memo-del").addEventListener("click", async () => {
+        await deleteDoc(doc(db, "memo", docSnap.id));
+      });
       el.memoList.appendChild(item);
     });
   });
 }
 
 // ✅ 메뉴 버튼
-el.navBtns.forEach((b) => {
-  if (b.dataset.album !== "all") b.addEventListener("click", () => setAlbum(b.dataset.album));
-});
+el.navBtns.forEach((b) => b.addEventListener("click", () => setAlbum(b.dataset.album)));
 document.querySelector(".nav-title").addEventListener("click", () => setAlbum("all"));
