@@ -32,18 +32,18 @@ const storage = getStorage(app);
 
 // ✅ 앨범 정의
 const ALBUMS = {
-  date: { title: "데이트", emoji: "💖", collection: "date" },
-  mingyu: { title: "민규", emoji: "🐻", collection: "mingyu" },
-  yoonjung: { title: "윤정", emoji: "🐰", collection: "yoonjung" },
+  date: { title: "데이트/추억", emoji: "💖", collection: "date" },
+  mingyu: { title: "민규", emoji: "💚", collection: "mingyu" },
+  yoonjung: { title: "윤정", emoji: "💜", collection: "yoonjung" },
   memo: { title: "메모", emoji: "📝", collection: "memo" },
   all: { title: "모든 사진", emoji: "🌍", collection: "all" }
 };
 
-let currentAlbum = "all"; // 기본 홈(모든사진)
+let currentAlbum = "all";
 let allPhotos = [];
 let currentIndex = 0;
 
-// ✅ 요소 선택
+// ✅ 요소
 const el = {
   title: document.getElementById("album-title"),
   navBtns: document.querySelectorAll(".nav-btn"),
@@ -60,7 +60,7 @@ const el = {
   memoList: document.getElementById("memo-list"),
 };
 
-// ✅ 페이지 로드 시 마지막 앨범 또는 홈
+// ✅ 마지막 앨범 기억
 window.addEventListener("DOMContentLoaded", () => {
   const last = localStorage.getItem("lastAlbum");
   setAlbum(last && ALBUMS[last] ? last : "all");
@@ -75,8 +75,11 @@ function setAlbum(name) {
   localStorage.setItem("lastAlbum", name);
   const meta = ALBUMS[name];
   el.title.textContent = `${meta.emoji} ${meta.title}`;
-  el.uploadArea.classList.toggle("hidden", name === "all");
+
+  // ✅ "메모"일 때는 업로더+메모만, 나머지 업로드/삭제 숨김
+  el.uploadArea.classList.toggle("hidden", name === "all" || name === "memo");
   el.memoArea.classList.toggle("hidden", name !== "memo");
+
   el.gallery.innerHTML = "";
   allPhotos = [];
 
@@ -116,7 +119,7 @@ el.uploadBtn.addEventListener("click", async () => {
   alert("✅ 업로드 완료!");
 });
 
-// ✅ 사진 삭제
+// ✅ 선택삭제
 el.deleteBtn.addEventListener("click", async () => {
   const checks = Array.from(document.querySelectorAll(".select-chk:checked"));
   if (!checks.length) return alert("삭제할 사진을 선택하세요.");
@@ -147,7 +150,7 @@ function loadAlbumPhotos(name) {
   });
 }
 
-// ✅ 모든 사진 보기
+// ✅ 모든사진 (홈)
 function loadAllPhotos() {
   el.gallery.innerHTML = "";
   allPhotos = [];
@@ -198,7 +201,7 @@ function buildCard({ id, url, date, uploader, album, path }) {
   return card;
 }
 
-// ✅ 모달 (좌우 이동 + 다운로드 + 업로더/날짜 표시)
+// ✅ 모달
 function showImageModal(url) {
   let modal = document.getElementById("image-modal");
   if (!modal) {
@@ -206,26 +209,21 @@ function showImageModal(url) {
     modal.id = "image-modal";
     modal.className = "modal";
     modal.innerHTML = `
-      <button class="modal-nav prev" style="color:#1b5e20;background:rgba(255,255,255,0.7)">◀</button>
+      <button class="modal-nav prev">◀</button>
       <div class="modal-content">
         <img id="modal-img" src="" alt="preview" />
         <div id="img-info"></div>
         <button id="download-btn">⬇ 다운로드</button>
       </div>
-      <button class="modal-nav next" style="color:#1b5e20;background:rgba(255,255,255,0.7)">▶</button>
+      <button class="modal-nav next">▶</button>
     `;
     document.body.appendChild(modal);
 
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.classList.remove("show");
     });
-    document.querySelector(".prev").addEventListener("click", showPrev);
-    document.querySelector(".next").addEventListener("click", showNext);
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") modal.classList.remove("show");
-      if (e.key === "ArrowLeft") showPrev();
-      if (e.key === "ArrowRight") showNext();
-    });
+    modal.querySelector(".prev").addEventListener("click", showPrev);
+    modal.querySelector(".next").addEventListener("click", showNext);
   }
 
   updateModalContent(url);
@@ -256,9 +254,11 @@ function showNext() {
 // ✅ 메모
 el.memoAdd?.addEventListener("click", async () => {
   const text = el.memoInput.value.trim();
-  if (!text) return alert("메모를 입력하세요.");
+  const uploader = el.userSelect.value;
+  if (!text || !uploader) return alert("업로더와 메모를 입력하세요.");
   await addDoc(collection(db, "memo"), {
     text,
+    uploader,
     ts: Date.now(),
     date: new Date().toLocaleString()
   });
@@ -275,21 +275,15 @@ function loadMemos() {
       item.className = "memo-item";
       item.innerHTML = `
         <div>${data.text}</div>
-        <div class="memo-meta">${data.date}</div>
-        <button class="memo-del">🗑️</button>
+        <div class="memo-meta">${data.uploader} | ${data.date}</div>
       `;
-      item.querySelector(".memo-del").addEventListener("click", async () => {
-        await deleteDoc(doc(db, "memo", docSnap.id));
-      });
       el.memoList.appendChild(item);
     });
   });
 }
 
-// ✅ 메뉴 버튼 이벤트
+// ✅ 메뉴 버튼
 el.navBtns.forEach((b) => {
   if (b.dataset.album !== "all") b.addEventListener("click", () => setAlbum(b.dataset.album));
 });
-
-// ✅ "사진보관함 📸" 클릭 시 홈(모든사진) 이동
 document.querySelector(".nav-title").addEventListener("click", () => setAlbum("all"));
