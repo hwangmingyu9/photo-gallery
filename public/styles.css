@@ -304,17 +304,20 @@ main {
   overflow-wrap: break-word;
 }
 
-/* ✅ 🗑️ 삭제 버튼 (고정 + 작게) */
+/* ✅ 🗑️ 삭제 버튼 (고정 + 작게 + 배경 없이 텍스트만) */
 .memo-del {
   position: absolute;
   right: 10px;
   top: 50%;
-  transform: translateY(-50%); /* ✅ 세로 중앙 정렬 */
-  background: transparent;
-  border: none;
+  transform: translateY(-50%);
+  background: none;        /* ✅ 배경 제거 */
+  border: none;            /* ✅ 테두리 제거 */
   color: #777;
   cursor: pointer;
-  font-size: 12px; /* 작게 */
+  font-size: 12px;
+  padding: 0;              /* ✅ 여백 제거 */
+  width: auto;             /* ✅ 버튼 크기 자동으로 축소 */
+  height: auto;
   transition: color 0.2s;
 }
 .memo-del:hover {
