@@ -51,9 +51,7 @@ const el = {
 };
 
 // ✅ 마지막 앨범 기억
-window.addEventListener("DOMContentLoaded", () => {
-  setAlbum("all");
-});
+window.addEventListener("DOMContentLoaded", () => setAlbum("all"));
 window.addEventListener("beforeunload", () => {
   localStorage.setItem("lastAlbum", currentAlbum);
 });
@@ -63,7 +61,6 @@ function setAlbum(name) {
   currentAlbum = name;
   const meta = ALBUMS[name];
   el.title.textContent = `${meta.emoji} ${meta.title}`;
-
   el.uploadArea.classList.toggle("hidden", name === "all" || name === "memo");
   el.memoArea.classList.toggle("hidden", name !== "memo");
   el.gallery.innerHTML = "";
@@ -240,6 +237,7 @@ el.memoAdd?.addEventListener("click", async () => {
   el.memoInput.value = "";
   el.memoUser.value = "";
 });
+
 function loadMemos() {
   const q = query(collection(db, "memo"), orderBy("ts", "desc"));
   onSnapshot(q, (snap) => {
@@ -249,9 +247,9 @@ function loadMemos() {
       const item = document.createElement("div");
       item.className = "memo-item";
       item.innerHTML = `
-        <div>${data.text}</div>
-        <div class="memo-meta">${data.user} | ${data.date}</div>
+        <div class="memo-text">${data.text}</div>
         <button class="memo-del">🗑️</button>
+        <div class="memo-meta">${data.user} | ${data.date}</div>
       `;
       item.querySelector(".memo-del").addEventListener("click", async () => {
         await deleteDoc(doc(db, "memo", docSnap.id));
