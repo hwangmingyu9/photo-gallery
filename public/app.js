@@ -40,7 +40,8 @@ const ALBUMS = {
 };
 
 let currentAlbum = "date";
-let selectedIds = new Set();
+let allPhotos = [];
+let currentIndex = 0;
 
 // ✅ 요소 선택
 const el = {
@@ -59,25 +60,25 @@ const el = {
   memoList: document.getElementById("memo-list"),
 };
 
-// ✅ 현재 위치 기억
-window.addEventListener("beforeunload", () => {
-  localStorage.setItem("lastAlbum", currentAlbum);
-});
+// ✅ 마지막 앨범 기억
 window.addEventListener("DOMContentLoaded", () => {
   const last = localStorage.getItem("lastAlbum");
-  if (last && ALBUMS[last]) setAlbum(last);
-  else setAlbum("date");
+  setAlbum(last && ALBUMS[last] ? last : "date");
+});
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("lastAlbum", currentAlbum);
 });
 
 // ✅ 앨범 변경
 function setAlbum(name) {
   currentAlbum = name;
+  localStorage.setItem("lastAlbum", name);
   const meta = ALBUMS[name];
   el.title.textContent = `${meta.emoji} ${meta.title}`;
   el.uploadArea.classList.toggle("hidden", name === "all");
   el.memoArea.classList.toggle("hidden", name !== "memo");
   el.gallery.innerHTML = "";
-  selectedIds.clear();
+  allPhotos = [];
 
   if (name === "memo") {
     loadMemos();
@@ -93,7 +94,8 @@ el.uploadBtn.addEventListener("click", async () => {
   const files = el.fileInput.files;
   const date = el.dateInput.value;
   const uploader = el.userSelect.value;
-  if (!files.length || !date || !uploader) return alert("📅 날짜와 업로더, 파일을 선택하세요.");
+  if (!files.length || !date || !uploader)
+    return alert("📅 날짜, 업로더, 파일을 모두 선택하세요.");
 
   for (const file of files) {
     const path = `${currentAlbum}/${Date.now()}_${file.name}`;
@@ -114,7 +116,7 @@ el.uploadBtn.addEventListener("click", async () => {
   alert("✅ 업로드 완료!");
 });
 
-// ✅ 삭제 버튼
+// ✅ 사진 삭제
 el.deleteBtn.addEventListener("click", async () => {
   const checks = Array.from(document.querySelectorAll(".select-chk:checked"));
   if (!checks.length) return alert("삭제할 사진을 선택하세요.");
@@ -130,13 +132,15 @@ el.deleteBtn.addEventListener("click", async () => {
   alert("🗑️ 선택된 사진 삭제 완료");
 });
 
-// ✅ 사진 실시간 불러오기
+// ✅ 앨범별 사진 불러오기
 function loadAlbumPhotos(name) {
   const q = query(collection(db, name), orderBy("ts", "desc"));
   onSnapshot(q, (snap) => {
     el.gallery.innerHTML = "";
+    allPhotos = [];
     snap.forEach((docSnap) => {
       const data = docSnap.data();
+      allPhotos.push({ ...data, id: docSnap.id, album: name });
       const card = buildCard({ id: docSnap.id, ...data, album: name });
       el.gallery.appendChild(card);
     });
@@ -146,12 +150,14 @@ function loadAlbumPhotos(name) {
 // ✅ 모든 사진 보기
 function loadAllPhotos() {
   el.gallery.innerHTML = "";
-  Object.keys(ALBUMS).forEach(name => {
+  allPhotos = [];
+  Object.keys(ALBUMS).forEach((name) => {
     if (["memo", "all"].includes(name)) return;
     const q = query(collection(db, name), orderBy("ts", "desc"));
     onSnapshot(q, (snap) => {
       snap.forEach((docSnap) => {
         const data = docSnap.data();
+        allPhotos.push({ ...data, id: docSnap.id, album: name });
         const card = buildCard({ id: docSnap.id, ...data, album: name });
         el.gallery.appendChild(card);
       });
@@ -160,19 +166,18 @@ function loadAllPhotos() {
 }
 
 // ✅ 카드 생성
-function buildCard({ id, url, date, uploader, album, path, collection }) {
+function buildCard({ id, url, date, uploader, album, path }) {
   const card = document.createElement("div");
   card.className = "card";
   card.dataset.id = id;
   card.dataset.path = path;
-  card.dataset.collection = collection || ALBUMS[album].collection;
+  card.dataset.collection = album;
 
   const img = document.createElement("img");
   img.src = url;
-
-  // ✅ 모달로 확대 보기
   img.addEventListener("click", (e) => {
     e.stopPropagation();
+    currentIndex = allPhotos.findIndex((p) => p.url === url);
     showImageModal(url);
   });
 
@@ -185,12 +190,7 @@ function buildCard({ id, url, date, uploader, album, path, collection }) {
 
   const meta = document.createElement("div");
   meta.className = "meta";
-  const left = document.createElement("span");
-  left.textContent = date || "";
-  const right = document.createElement("span");
-  right.textContent = uploader || "";
-  meta.appendChild(left);
-  meta.appendChild(right);
+  meta.innerHTML = `<span>${date || ""}</span><span>${uploader || ""}</span>`;
 
   card.appendChild(img);
   card.appendChild(chkWrap);
@@ -198,27 +198,70 @@ function buildCard({ id, url, date, uploader, album, path, collection }) {
   return card;
 }
 
-// ✅ 모달 보기
+// ✅ 모달 (좌우 이동 + 다운로드 + 업로더/날짜 표시)
 function showImageModal(url) {
   let modal = document.getElementById("image-modal");
   if (!modal) {
     modal = document.createElement("div");
     modal.id = "image-modal";
     modal.className = "modal";
-    modal.innerHTML = `<div class="modal-content"><img id="modal-img" src="" alt="preview" /></div>`;
+    modal.innerHTML = `
+      <button class="modal-nav prev">◀</button>
+      <div class="modal-content">
+        <img id="modal-img" src="" alt="preview" />
+        <div id="img-info"></div>
+        <button id="download-btn">⬇ 다운로드</button>
+      </div>
+      <button class="modal-nav next">▶</button>
+    `;
     document.body.appendChild(modal);
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("show"); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("show"); });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("show");
+    });
+    document.querySelector(".prev").addEventListener("click", showPrev);
+    document.querySelector(".next").addEventListener("click", showNext);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") modal.classList.remove("show");
+      if (e.key === "ArrowLeft") showPrev();
+      if (e.key === "ArrowRight") showNext();
+    });
   }
-  modal.querySelector("#modal-img").src = url;
+
+  updateModalContent(url);
   modal.classList.add("show");
 }
 
-// ✅ 메모 기능
+function updateModalContent(url) {
+  const modal = document.getElementById("image-modal");
+  const img = modal.querySelector("#modal-img");
+  const info = modal.querySelector("#img-info");
+  const downloadBtn = modal.querySelector("#download-btn");
+
+  const photo = allPhotos[currentIndex];
+  img.src = url;
+  info.textContent = `${photo.album || ""} | ${photo.uploader || ""} | ${photo.date || ""}`;
+  downloadBtn.onclick = () => window.open(url, "_blank");
+}
+
+function showPrev() {
+  currentIndex = (currentIndex - 1 + allPhotos.length) % allPhotos.length;
+  updateModalContent(allPhotos[currentIndex].url);
+}
+function showNext() {
+  currentIndex = (currentIndex + 1) % allPhotos.length;
+  updateModalContent(allPhotos[currentIndex].url);
+}
+
+// ✅ 메모
 el.memoAdd?.addEventListener("click", async () => {
   const text = el.memoInput.value.trim();
   if (!text) return alert("메모를 입력하세요.");
-  await addDoc(collection(db, "memo"), { text, ts: Date.now(), date: new Date().toLocaleString() });
+  await addDoc(collection(db, "memo"), {
+    text,
+    ts: Date.now(),
+    date: new Date().toLocaleString()
+  });
   el.memoInput.value = "";
 });
 
@@ -243,6 +286,6 @@ function loadMemos() {
   });
 }
 
-// ✅ 메뉴 버튼
-el.navBtns.forEach(b => b.addEventListener("click", () => setAlbum(b.dataset.album)));
+// ✅ 메뉴 버튼 이벤트
+el.navBtns.forEach((b) => b.addEventListener("click", () => setAlbum(b.dataset.album)));
 document.querySelector(".nav-title").addEventListener("click", () => location.reload());
