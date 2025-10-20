@@ -7,51 +7,42 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <!-- ✅ 상단 초록바 (타이틀 클릭 시 홈으로 이동) -->
-  <nav class="navbar">
-    <div class="nav-title" id="go-home">사진 보관함 📸</div>
-  </nav>
-
-  <!-- ✅ 흰색 메뉴바 -->
-  <div class="subnav">
+  <header class="navbar">
+    <div class="nav-title">사진 보관함 📸</div>
+  </header>
+  <nav class="subnav">
     <div class="nav-links">
-      <button class="nav-btn" data-album="all">모든 사진</button>
       <button class="nav-btn" data-album="date">데이트</button>
       <button class="nav-btn" data-album="mingyu">민규</button>
       <button class="nav-btn" data-album="yoonjung">윤정</button>
       <button class="nav-btn" data-album="memo">메모</button>
+      <button class="nav-btn" data-album="all">모든 사진</button>
     </div>
-  </div>
+  </nav>
 
   <main>
-    <h2 id="album-title">홈</h2>
+    <h2 id="album-title">💖 데이트</h2>
 
-    <!-- 업로드 영역 -->
-    <div class="upload-area" id="upload-section">
+    <section class="upload-area">
       <div class="controls-row">
-        <label class="date-label" for="date-input">날짜</label>
+        <label class="date-label">날짜</label>
         <input type="date" id="date-input" />
+        <select id="user-select">
+          <option value="">업로더 선택</option>
+          <option value="민규">민규</option>
+          <option value="윤정">윤정</option>
+        </select>
         <input type="file" id="file-input" multiple />
-      </div>
-
-      <div class="uploader-row" id="uploader-row" style="display:none;">
-        <span class="uploader-title">올린 사람:</span>
-        <label><input type="radio" name="uploader" value="민규" /> 민규</label>
-        <label><input type="radio" name="uploader" value="윤정" /> 윤정</label>
-      </div>
-
-      <div class="buttons-row">
         <button id="upload-btn">업로드</button>
         <button id="delete-btn">선택 삭제</button>
       </div>
-    </div>
+    </section>
 
-    <!-- 메모 영역 -->
-    <div class="memo-area" id="memo-section" style="display:none;">
-      <textarea id="memo-text" placeholder="메모를 입력하세요..."></textarea>
-      <button id="memo-save-btn">메모 저장</button>
+    <section class="memo-area hidden">
+      <textarea id="memo-input" placeholder="메모를 입력하세요..."></textarea>
+      <button id="memo-add">메모 추가</button>
       <div id="memo-list"></div>
-    </div>
+    </section>
 
     <div id="gallery" class="gallery"></div>
   </main>

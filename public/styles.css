@@ -1,13 +1,12 @@
-/* 기본 설정 */
 * { box-sizing: border-box; }
 body {
   font-family: Pretendard, sans-serif;
   margin: 0;
-  background: #ffffff;
+  background: #fff;
   color: #222;
 }
 
-/* ✅ 상단 초록바 (고정) */
+/* 상단 초록바 */
 .navbar {
   position: sticky;
   top: 0;
@@ -17,173 +16,129 @@ body {
   justify-content: center;
   align-items: center;
   height: 56px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,.08);
 }
-
 .nav-title {
-  font-weight: 700;
+  font-weight: bold;
   font-size: 18px;
   cursor: pointer;
-  transition: opacity 0.2s;
-}
-.nav-title:hover {
-  opacity: 0.8;
 }
 
-/* ✅ 하얀 서브바 (메뉴, 우측 정렬) */
+/* 메뉴 바 */
 .subnav {
   background: #fff;
   border-bottom: 1px solid #eee;
 }
 .nav-links {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 12px;
+  gap: 8px;
   max-width: 860px;
   margin: 0 auto;
-  padding: 10px 12px;
-  display: flex;
-  justify-content: flex-end; /* 메뉴 오른쪽 정렬 */
-  gap: 8px;
-  flex-wrap: wrap;
 }
 .nav-btn {
-  background: transparent;
   border: none;
-  color: #333;
-  font-size: 14px;
-  cursor: pointer;
+  background: transparent;
   padding: 6px 10px;
   border-radius: 6px;
-  transition: background .2s;
+  cursor: pointer;
 }
-.nav-btn:hover { background: rgba(76,175,80,.12); }
+.nav-btn:hover { background: rgba(76,175,80,.1); }
 
-/* ✅ 본문 레이아웃 */
+/* 본문 */
 main {
   max-width: 860px;
   margin: 0 auto;
-  padding: 18px 12px 40px;
+  padding: 20px;
 }
 #album-title {
   text-align: center;
-  font-size: 20px;
   font-weight: 700;
-  margin: 6px 0 16px;
+  font-size: 20px;
+  margin-bottom: 16px;
 }
 
-/* ✅ 업로드 영역 */
+/* 업로드 */
 .upload-area {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
-  align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
-.controls-row,
-.buttons-row,
-.uploader-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.date-label {
-  font-weight: 600;
-}
-input[type="date"],
-input[type="file"] {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 6px 10px;
+input, select, button {
   font-size: 14px;
-  background: #fff;
 }
-
+input[type="file"], input[type="date"], select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
 button {
   background: #4CAF50;
-  color: white;
+  color: #fff;
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
 }
 button:hover { background: #43a047; }
 
-.uploader-title {
-  font-weight: 600;
-}
-
-/* ✅ 갤러리 카드 (3열 반응형) */
+/* 갤러리 */
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-@media (max-width: 520px) {
-  .gallery { grid-template-columns: repeat(3, 1fr); }
-}
-
 .card {
   position: relative;
-  width: 100%;
   aspect-ratio: 1/1;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  background: #f7f7f7;
 }
 .card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
 }
-
-/* ✅ 우상단 체크박스 */
 .card .check-wrap {
   position: absolute;
   top: 6px;
   right: 6px;
-  background: rgba(255,255,255,.85);
-  border-radius: 8px;
-  padding: 4px;
+  background: rgba(255,255,255,.8);
+  border-radius: 6px;
+  padding: 3px;
 }
-.card .select-chk {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-/* ✅ 하단 날짜/업로더 라벨 */
 .card .meta {
   position: absolute;
-  left: 0;
   bottom: 0;
   width: 100%;
   background: rgba(0,0,0,.45);
-  color: #fff;
+  color: white;
   font-size: 12px;
   padding: 4px 6px;
   display: flex;
   justify-content: space-between;
 }
 
-/* ✅ 메모 영역 */
+/* 메모 */
 .memo-area {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
 }
 .memo-area textarea {
   width: 100%;
   max-width: 640px;
-  min-height: 92px;
+  min-height: 80px;
   padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ddd;
   border-radius: 10px;
+  border: 1px solid #ddd;
 }
 #memo-list {
   width: 100%;
@@ -193,28 +148,41 @@ button:hover { background: #43a047; }
   gap: 8px;
 }
 .memo-item {
-  position: relative;
-  background: #f5f5f5;
+  background: #f6f6f6;
   border-radius: 10px;
   padding: 10px 40px 10px 12px;
-  text-align: left;
-}
-.memo-meta {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
+  position: relative;
 }
 .memo-del {
   position: absolute;
-  right: 10px;
   top: 10px;
-  background: transparent;
-  color: #888;
+  right: 10px;
   border: none;
+  background: transparent;
   cursor: pointer;
 }
 
-/* ✅ 홈: 액션 숨김용 클래스 */
-.hidden {
-  display: none !important;
+/* ✅ 모달 보기 */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
 }
+.modal.show { display: flex; }
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+}
+.modal-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* 숨김 */
+.hidden { display: none !important; }
