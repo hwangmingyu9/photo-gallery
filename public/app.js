@@ -22,8 +22,8 @@ const storage = getStorage(app);
 // ✅ 앨범 정의
 const ALBUMS = {
   date: { title: "데이트/추억", emoji: "💖", collection: "date" },
-  mingyu: { title: "민규 🐻", emoji: "💚", collection: "mingyu" },
-  yoonjung: { title: "윤정 🐰", emoji: "💜", collection: "yoonjung" },
+  mingyu: { title: "민규 🐻", emoji: "", collection: "mingyu" },
+  yoonjung: { title: "윤정 🐰", emoji: "", collection: "yoonjung" },
   memo: { title: "메모", emoji: "📝", collection: "memo" },
   all: { title: "모든 사진", emoji: "🌍", collection: "all" }
 };

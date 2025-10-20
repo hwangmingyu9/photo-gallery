@@ -7,43 +7,60 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <!-- 상단 초록바 -->
   <header class="navbar">
-    <div class="nav-title">사진 보관함 📸</div>
+    <div class="nav-title" data-album="all">사진 보관함 📸</div>
   </header>
+
+  <!-- 상단 메뉴바 -->
   <nav class="subnav">
     <div class="nav-links">
       <button class="nav-btn" data-album="date">데이트/추억</button>
-      <button class="nav-btn" data-album="mingyu">민규 🐻</button>
-      <button class="nav-btn" data-album="yoonjung">윤정 🐰</button>
+      <button class="nav-btn" data-album="mingyu">민규</button>
+      <button class="nav-btn" data-album="yoonjung">윤정</button>
       <button class="nav-btn" data-album="memo">메모</button>
-      <button class="nav-btn" data-album="all">모든 사진</button>
+      <!-- “모든 사진” 버튼은 제거 -->
     </div>
   </nav>
 
   <main>
-    <h2 id="album-title">💖 데이트</h2>
+    <h2 id="album-title">💖 데이트/추억</h2>
 
+    <!-- 업로드 영역 -->
     <section class="upload-area">
-      <div class="controls-row">
+      <div class="upload-row">
         <label class="date-label">날짜</label>
         <input type="date" id="date-input" />
+      </div>
+
+      <div class="upload-row">
         <select id="user-select">
           <option value="">업로더 선택</option>
           <option value="민규">민규</option>
           <option value="윤정">윤정</option>
         </select>
         <input type="file" id="file-input" multiple />
-        <button id="upload-btn">업로드</button>
-        <button id="delete-btn">선택 삭제</button>
+      </div>
+
+      <div class="upload-row">
+        <button id="upload-btn">📤 업로드</button>
+        <button id="delete-btn">🗑️ 선택 삭제</button>
       </div>
     </section>
 
+    <!-- 메모 영역 -->
     <section class="memo-area hidden">
+      <select id="memo-user">
+        <option value="">업로더 선택</option>
+        <option value="민규">민규</option>
+        <option value="윤정">윤정</option>
+      </select>
       <textarea id="memo-input" placeholder="메모를 입력하세요..."></textarea>
       <button id="memo-add">메모 추가</button>
       <div id="memo-list"></div>
     </section>
 
+    <!-- 갤러리 -->
     <div id="gallery" class="gallery"></div>
   </main>
 

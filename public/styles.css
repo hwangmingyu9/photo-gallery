@@ -1,4 +1,4 @@
-/* 기본 스타일 */
+/* ✅ 기본 스타일 */
 * { box-sizing: border-box; }
 body {
   font-family: Pretendard, sans-serif;
@@ -78,9 +78,10 @@ main {
 .controls-row {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
   width: 100%;
-  max-width: 340px; /* 전체 폭 살짝 줄임 */
+  max-width: 340px;
 }
 
 /* ✅ 입력창 및 버튼 */
@@ -90,12 +91,19 @@ main {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 8px 10px; /* 살짝 얇게 */
-  font-size: 13px; /* 크기 줄임 */
+  padding: 8px 10px;
+  font-size: 13px;
   background: #fff;
   color: #333;
 }
 
+/* 날짜 박스 크기만 살짝 줄임 */
+.controls-row input[type="date"] {
+  width: 140px;
+  align-self: center;
+}
+
+/* ✅ 버튼 공통 */
 .controls-row button {
   width: 100%;
   border: none;
@@ -106,15 +114,26 @@ main {
   background: #4CAF50;
   color: #fff;
   transition: background .2s;
+  font-weight: 600;
 }
 .controls-row button:hover {
   background: #43a047;
 }
 
+/* ✅ 3줄 배치 (날짜/파일선택/버튼) */
+.controls-row:nth-of-type(1),
+.controls-row:nth-of-type(2),
+.controls-row:nth-of-type(3) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ✅ 갤러리 - 3열 고정 */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3열 고정 */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 .card {
@@ -191,20 +210,21 @@ main {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   border: none;
   font-size: 22px;
   padding: 6px 10px;
   border-radius: 50%;
   cursor: pointer;
-  color: #333;
+  color: #222;
   font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 .modal-nav:hover {
   background: #fff;
 }
-.modal-nav.prev { left: 12px; }
-.modal-nav.next { right: 12px; }
+.modal-nav.prev { left: 16px; }
+.modal-nav.next { right: 16px; }
 #download-btn {
   background: #4CAF50;
   border: none;
@@ -275,3 +295,12 @@ main {
 
 /* ✅ 숨김 */
 .hidden { display: none !important; }
+
+/* ✅ 모바일 반응형 */
+@media (max-width: 520px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+  .controls-row { max-width: 300px; }
+  .controls-row input,
+  .controls-row button,
+  .controls-row select { font-size: 12px; }
+}
