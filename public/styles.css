@@ -24,17 +24,17 @@ body {
   cursor: pointer;
 }
 
-/* ✅ 서브 메뉴바 */
+/* ✅ 상단 서브 메뉴바 */
 .subnav {
   background: #fff;
   border-bottom: 1px solid #eee;
 }
 .nav-links {
   display: flex;
-  justify-content: center;
-  gap: 6px;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  gap: 10px;
   flex-wrap: wrap;
-  padding: 10px 0;
+  padding: 10px 20px;
 }
 .nav-btn {
   background: transparent;
@@ -80,42 +80,41 @@ main {
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  max-width: 360px;
+  max-width: 340px; /* 전체 폭 살짝 줄임 */
 }
 
-/* ✅ 버튼/입력박스 3줄 정렬 (초록색 직사각형 스타일) */
-.controls-row button,
-.controls-row select,
-.controls-row input[type="date"],
-.controls-row input[type="file"] {
-  width: 100%;
-  border: none;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  text-align: center;
-  transition: all .2s;
-}
+/* ✅ 입력창 및 버튼 */
 .controls-row input[type="date"],
 .controls-row input[type="file"],
 .controls-row select {
-  background: #fff;
+  width: 100%;
   border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px; /* 살짝 얇게 */
+  font-size: 13px; /* 크기 줄임 */
+  background: #fff;
   color: #333;
 }
+
 .controls-row button {
+  width: 100%;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
   background: #4CAF50;
   color: #fff;
+  transition: background .2s;
 }
 .controls-row button:hover {
   background: #43a047;
 }
 
-/* ✅ 갤러리 */
+/* ✅ 갤러리 - 3열 고정 */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3열 고정 */
   gap: 10px;
 }
 .card {
@@ -192,7 +191,7 @@ main {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.9);
   border: none;
   font-size: 22px;
   padding: 6px 10px;
