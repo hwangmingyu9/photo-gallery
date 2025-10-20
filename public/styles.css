@@ -1,4 +1,4 @@
-/* ✅ 기본 스타일 */
+/* 기본 스타일 */
 * { box-sizing: border-box; }
 body {
   font-family: Pretendard, sans-serif;
@@ -31,7 +31,7 @@ body {
 }
 .nav-links {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
   padding: 10px 20px;
@@ -71,17 +71,14 @@ main {
 .upload-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ✅ 왼쪽 정렬 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-left: 20px; /* 왼쪽 여백 */
   gap: 10px;
   margin-bottom: 16px;
-  width: 100%;
-  max-width: 860px; /* 본문 폭 맞춰서 자연스럽게 */
 }
-
 .controls-row {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ✅ 왼쪽 정렬 */
   gap: 8px;
   width: 100%;
   max-width: 340px;
@@ -99,14 +96,6 @@ main {
   background: #fff;
   color: #333;
 }
-
-/* 날짜 박스 크기만 살짝 줄임 */
-.controls-row input[type="date"] {
-  width: 140px;
-  align-self: center;
-}
-
-/* ✅ 버튼 공통 */
 .controls-row button {
   width: 100%;
   border: none;
@@ -117,23 +106,12 @@ main {
   background: #4CAF50;
   color: #fff;
   transition: background .2s;
-  font-weight: 600;
 }
 .controls-row button:hover {
   background: #43a047;
 }
 
-/* ✅ 3줄 배치 (날짜/파일선택/버튼) */
-.controls-row:nth-of-type(1),
-.controls-row:nth-of-type(2),
-.controls-row:nth-of-type(3) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ✅ 갤러리 - 3열 고정 */
+/* ✅ 갤러리 (3열) */
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -213,21 +191,20 @@ main {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.9);
   border: none;
   font-size: 22px;
   padding: 6px 10px;
   border-radius: 50%;
   cursor: pointer;
-  color: #222;
+  color: #333;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 .modal-nav:hover {
   background: #fff;
 }
-.modal-nav.prev { left: 16px; }
-.modal-nav.next { right: 16px; }
+.modal-nav.prev { left: 12px; }
+.modal-nav.next { right: 12px; }
 #download-btn {
   background: #4CAF50;
   border: none;
@@ -240,7 +217,7 @@ main {
 }
 #download-btn:hover { background: #43a047; }
 
-/* ✅ 메모 영역 */
+/* ✅ 메모 */
 .memo-area {
   display: flex;
   flex-direction: column;
@@ -248,7 +225,6 @@ main {
   gap: 8px;
   margin-bottom: 16px;
 }
-
 .memo-area select,
 .memo-area textarea,
 .memo-area button {
@@ -259,7 +235,6 @@ main {
   font-size: 14px;
   border: 1px solid #ccc;
 }
-
 .memo-area button {
   background: #4CAF50;
   color: #fff;
@@ -267,7 +242,6 @@ main {
   cursor: pointer;
   font-weight: 600;
 }
-
 .memo-area button:hover {
   background: #43a047;
 }
@@ -284,29 +258,28 @@ main {
 
 /* ✅ 메모 카드 */
 .memo-item {
-  position: relative; /* 🧩 삭제버튼 고정 기준 */
+  position: relative;
   background: #f5f5f5;
-  padding: 10px 36px 10px 14px; /* 오른쪽 여유 공간 확보 */
+  padding: 12px 36px 12px 14px; /* 오른쪽 공간 확보 */
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   color: #222;
   line-height: 1.5;
-  font-size: 13px; /* ✅ 메모 글씨 크기 */
-  word-break: keep-all; /* 단어 단위 줄바꿈 */
-  white-space: pre-wrap; /* 자연스러운 줄바꿈 */
-  overflow-wrap: break-word;
-}
-
-/* ✅ 메모 텍스트 */
-.memo-item div:first-child {
-  flex: 1;
+  font-size: 13px;
+  word-break: keep-all;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
 
-/* ✅ 🗑️ 삭제 버튼 (고정 + 작게 + 배경 없이 텍스트만) */
+/* ✅ 메모 텍스트 */
+.memo-text {
+  display: block;
+  margin-right: 25px; /* 삭제버튼과 간격 */
+}
+
+/* ✅ 🗑️ 삭제 버튼 (고정, 작고 깔끔하게) */
 .memo-del {
-  all: unset;              /* ✅ 버튼의 기본 스타일 완전히 제거 */
+  all: unset;
   position: absolute;
   right: 10px;
   top: 50%;
@@ -314,10 +287,13 @@ main {
   color: #777;
   cursor: pointer;
   font-size: 12px;
+  line-height: 1;   /* ✅ 세로 정렬 보정 */
+  height: 14px;     /* ✅ 고정 높이 */
   transition: color 0.2s;
 }
+.memo-del:hover { color: #000; }
 
-/* ✅ 날짜 (아래 작게 표시) */
+/* ✅ 날짜 */
 .memo-meta {
   font-size: 11px;
   color: #777;
